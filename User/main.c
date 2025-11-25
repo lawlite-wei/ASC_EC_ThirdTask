@@ -7,6 +7,7 @@
 #include "Tarce.h"
 #include "Timer.h"
 #include "Control.h"
+#include "menu.h"
 
 
 /**
@@ -60,14 +61,16 @@ int main(void)
 			
 			if(number == 0)
 			{
-				OLED_ShowChinese(0,0,"发车");
+//				OLED_ShowChinese(0,0,"发车");
+				menu1();
 				// 停止电机
 				Motor1_SetPWM(0);
 				Motor2_SetPWM(0);
 			}
 			else if(number == 1)
 			{
-				OLED_ShowChinese(0,0,"启动");
+//				OLED_ShowChinese(0,0,"启动");
+				menu2();
 			}
 			
 			OLED_ShowChinese(0,48,"刘伟权的循迹小车");
@@ -80,6 +83,9 @@ int main(void)
 		if(number == 1)
 		{
 			Control_Task();
+//			测试电机的差异
+//			Motor1_SetPWM(100);
+//			Motor2_SetPWM(100);
 		}
 	}
 }
