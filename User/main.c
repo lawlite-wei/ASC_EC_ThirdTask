@@ -8,7 +8,7 @@
 #include "Timer.h"
 #include "Control.h"
 #include "menu.h"
-
+#include "Encoder.h"
 
 /**
   * 坐标轴定义：
@@ -32,7 +32,17 @@
   */
 
 uint16_t number = 0;
-uint8_t last_number = 0xFF; // 初始化为不可能的值
+uint16_t last_number = 0xFF; // 初始化为不可能的值
+uint16_t right_speed,left_speed;
+
+
+//尝试加入PID
+//float Target = 0;
+//float Actual,Out;
+//float Kp = 80,Ki,Kd = 130;
+//float error0,error1,error2;
+//extern float location;
+//float last_location;
 
 int main(void)
 {
@@ -42,6 +52,8 @@ int main(void)
 	Tarce_Init();
 	Timer_Init();
 	Key_Init();
+	Encoder1_Init();
+	Encoder2_Init();
 	
 	while (1)
 	{
@@ -71,6 +83,8 @@ int main(void)
 			{
 //				OLED_ShowChinese(0,0,"启动");
 				menu2();
+//				OLED_ShowSignedNum(70,16,right_speed,4,OLED_8X16);
+//				OLED_ShowSignedNum(70,32,left_speed,4,OLED_8X16);
 			}
 			
 			OLED_ShowChinese(0,48,"刘伟权的循迹小车");
@@ -83,9 +97,12 @@ int main(void)
 		if(number == 1)
 		{
 			Control_Task();
-//			测试电机的差异
+//			测试电机的差异(电机2的速度较快)
 //			Motor1_SetPWM(100);
 //			Motor2_SetPWM(100);
+//			OLED_ShowSignedNum(70,16,right_speed,4,OLED_8X16);
+//			OLED_ShowSignedNum(70,32,left_speed,4,OLED_8X16);
+			OLED_Update();
 		}
 	}
 }
@@ -93,9 +110,40 @@ int main(void)
 void TIM1_UP_IRQHandler(void)
 {
 	Key_Tick();
+	static uint16_t Count = 0;
 	
 	if (TIM_GetITStatus(TIM1, TIM_IT_Update) == SET)  
 	{
+		
+		Count ++;
+		if(Count >= 10)
+		{
+			right_speed = Encoder1_Get();
+			left_speed = Encoder2_Get();
+		}
+		
+		
+//		if(number == 1)
+//		{
+//			Count ++;
+//			if(Count > 5)
+//			{
+//				Count = 0;
+//				
+//				Location_test();
+//				
+//				last_location = location;
+//				error2 = error1;
+//				error1 = error0;
+//				error0 = Target - location;
+//				
+//				float deltaOut = Kp * (error0 - error1) + Ki * error0 + Kd * (error0 - 2 * error1 + error2);
+//				Out += deltaOut;
+//				
+//				Motor1_SetPWM(100 + Out);
+//				Motor2_SetPWM(100 - Out);
+//			}
+//		}
 		
 		TIM_ClearITPendingBit(TIM1, TIM_IT_Update); 
 	}

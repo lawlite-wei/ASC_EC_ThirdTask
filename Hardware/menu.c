@@ -15,4 +15,6 @@ int menu1(void)
 int menu2(void)
 {
 	OLED_ShowChinese(0,0,"启动");
+//	OLED_ShowString(0,16,"right:",OLED_8X16);
+//	OLED_ShowString(0,32,"left:",OLED_8X16);
 }

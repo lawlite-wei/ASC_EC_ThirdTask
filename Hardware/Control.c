@@ -13,14 +13,18 @@ void Control_Task(void)
 	//小左转
 	else if(X2 == 1 && X1 == 0 && X3 == 1 && X4 == 1)
 	{
-		Motor1_SetPWM(85);
-		Motor2_SetPWM(0);
+//		Motor1_SetPWM(85);
+//		Motor2_SetPWM(0);
+		Motor1_SetPWM(90);
+		Motor2_SetPWM(40);
 	}
 	//小右转
 	else if(X2 == 1 && X1 == 1 && X3 == 0 && X4 == 1)
 	{
-		Motor1_SetPWM(0);
-		Motor2_SetPWM(85);
+//		Motor1_SetPWM(0);
+//		Motor2_SetPWM(85);
+		Motor1_SetPWM(40);
+		Motor2_SetPWM(90);
 	}
 	//大左转
 	else if(X2 == 0 && X1 == 1 && X3 == 1 && X4 == 1)

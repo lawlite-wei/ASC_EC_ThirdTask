@@ -6,6 +6,9 @@
 #define X3 GPIO_ReadInputDataBit(GPIOB,GPIO_Pin_0)
 #define X4 GPIO_ReadInputDataBit(GPIOB,GPIO_Pin_1)
 
+//extern float location;
+
 void Tarce_Init(void);
+//void Location_test(void);
 
 #endif
