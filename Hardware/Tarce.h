@@ -9,6 +9,6 @@
 //extern float location;
 
 void Tarce_Init(void);
-//void Location_test(void);
+float Tarce_Location(void);
 
 #endif

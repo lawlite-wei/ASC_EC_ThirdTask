@@ -8,6 +8,7 @@
 #include "Timer.h"
 #include "Control.h"
 #include "menu.h"
+#include "pid.h"
 #include "Encoder.h"
 
 /**
@@ -33,16 +34,11 @@
 
 uint16_t number = 0;
 uint16_t last_number = 0xFF; // 初始化为不可能的值
-uint16_t right_speed,left_speed;
-
+uint16_t speed;
 
 //尝试加入PID
-//float Target = 0;
-//float Actual,Out;
-//float Kp = 80,Ki,Kd = 130;
-//float error0,error1,error2;
-//extern float location;
-//float last_location;
+float actual;
+int out;
 
 int main(void)
 {
@@ -53,7 +49,7 @@ int main(void)
 	Timer_Init();
 	Key_Init();
 	Encoder1_Init();
-	Encoder2_Init();
+//	Encoder2_Init();
 	
 	while (1)
 	{
@@ -96,13 +92,22 @@ int main(void)
 		// 在状态1时持续执行控制任务
 		if(number == 1)
 		{
-			Control_Task();
+//			Control_Task();
+			
+//==========测试用====================			
 //			测试电机的差异(电机2的速度较快)
-//			Motor1_SetPWM(100);
-//			Motor2_SetPWM(100);
-//			OLED_ShowSignedNum(70,16,right_speed,4,OLED_8X16);
-//			OLED_ShowSignedNum(70,32,left_speed,4,OLED_8X16);
+//			Motor1_SetPWM(80);
+//			Motor2_SetPWM(80);
+//			OLED_ShowSignedNum(0,16,speed,4,OLED_8X16);
+//			OLED_Update();
+			
+//==========PID=====================
+			Motor1_SetPWM(80 + out);
+			Motor2_SetPWM(80 - out);
+			OLED_ShowSignedNum(0,16,(80 + out),4,OLED_8X16);
+			OLED_ShowSignedNum(0,32,(80 - out),4,OLED_8X16);
 			OLED_Update();
+			
 		}
 	}
 }
@@ -116,34 +121,16 @@ void TIM1_UP_IRQHandler(void)
 	{
 		
 		Count ++;
-		if(Count >= 10)
+		if(Count >= 3)
 		{
-			right_speed = Encoder1_Get();
-			left_speed = Encoder2_Get();
+			Count = 0;
+			
+			actual = Tarce_Location();
+			out = pid_control(actual,0);
+			
+//			speed = Encoder1_Get();
+			
 		}
-		
-		
-//		if(number == 1)
-//		{
-//			Count ++;
-//			if(Count > 5)
-//			{
-//				Count = 0;
-//				
-//				Location_test();
-//				
-//				last_location = location;
-//				error2 = error1;
-//				error1 = error0;
-//				error0 = Target - location;
-//				
-//				float deltaOut = Kp * (error0 - error1) + Ki * error0 + Kd * (error0 - 2 * error1 + error2);
-//				Out += deltaOut;
-//				
-//				Motor1_SetPWM(100 + Out);
-//				Motor2_SetPWM(100 - Out);
-//			}
-//		}
 		
 		TIM_ClearITPendingBit(TIM1, TIM_IT_Update); 
 	}
